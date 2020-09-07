@@ -2,6 +2,7 @@ const {Book, validate} = require('../models/book');
 const {Genre} = require('../models/genre');
 const auth = require('../middleware/auth');
 const express = require('express');
+const admin = require('../middleware/admin');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -53,7 +54,7 @@ router.put('/:id', auth, async (req, res) => {
   res.send(book);
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
   const book = await Book.findByIdAndRemove(req.params.id);
 
   if (!book) return res.status(404).send('The book with the given ID was not found.');
